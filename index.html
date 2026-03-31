@@ -1,0 +1,1539 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>@ АЛЬФА — медицинская группа</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary:       #c01860;
+    --primary-hover: #a0134f;
+    --primary-light: #fdf0f7;
+    --accent:        #e91e8c;
+    --text:          #1a1a2e;
+    --text-muted:    #6b7280;
+    --bg:            #f7f0f8;
+    --bg-section:    #fdf5fb;
+    --border:        #ead5e8;
+    --border-light:  #f5eef8;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: linear-gradient(135deg, #ddeeff 0%, #f8e8f8 50%, #fde8f0 100%);
+    min-height: 100vh;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 20px 0 40px;
+  }
+
+  /* Screen container */
+  .screen {
+    display: none;
+    width: 320px;
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+    flex-direction: column;
+  }
+  .screen.active { display: flex; }
+
+  /* Header nav */
+  .nav-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border);
+    background: #fff;
+  }
+  .nav-header .label {
+    font-size: 13px;
+    color: var(--text-muted);
+    text-align: center;
+    flex: 1;
+  }
+  .nav-arrow {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    background: #fff;
+    border: none;
+    cursor: pointer;
+    color: var(--text);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.10);
+    padding: 0;
+    flex-shrink: 0;
+  }
+  .nav-arrow:hover { box-shadow: 0 2px 10px rgba(192,24,96,0.15); color: var(--primary); }
+  .nav-arrow.hidden { visibility: hidden; }
+
+  /* Logo block */
+  .logo-block {
+    padding: 24px 20px 20px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+  }
+  .logo-main {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    color: var(--primary);
+  }
+  .logo-sub {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+
+  /* Slider */
+  .slider-block {
+    border-bottom: 1px solid var(--border);
+    padding: 18px 20px 14px;
+  }
+  .slider-inner { position: relative; overflow: hidden; }
+  .slide { display: none; }
+  .slide.active { display: block; }
+  .slider-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .slide-arrow {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: var(--text-muted);
+    flex-shrink: 0;
+  }
+  .slide-text {
+    display: flex;
+    gap: 20px;
+    flex: 1;
+    justify-content: center;
+  }
+  .slide-item {
+    text-align: center;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+  .slide-item span {
+    display: block;
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+  .dots {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 12px;
+  }
+  .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #d0d5dd;
+    cursor: pointer;
+    border: none;
+    padding: 0;
+  }
+  .dot.active { background: var(--primary); }
+
+  /* Tile grid */
+  .tiles {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 10px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-section);
+  }
+  .tile {
+    flex: 1 1 calc(50% - 4px);
+    padding: 14px 16px;
+    font-size: 12px;
+    font-weight: 700;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 14px;
+    border: none;
+    background: #fff;
+    color: var(--text);
+    box-shadow: 0 2px 8px rgba(192,24,96,0.07);
+    transition: box-shadow 0.2s, transform 0.15s;
+    line-height: 1.35;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .tile:hover {
+    box-shadow: 0 4px 16px rgba(192,24,96,0.15);
+    transform: translateY(-1px);
+    color: var(--text);
+  }
+  .tile.full { flex: 1 1 100%; }
+  .tile.accent { background: var(--primary-light); }
+
+  /* Contact row */
+  .contact-row {
+    display: flex;
+    align-items: stretch;
+    border-bottom: 1px solid var(--border);
+  }
+  .phone {
+    flex: 1;
+    padding: 12px 14px;
+    font-size: 14px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    border-right: 1px solid var(--border);
+    color: var(--text);
+  }
+  .phone:hover { background: var(--primary-light); }
+  .social-btn {
+    padding: 12px 14px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    border-right: 1px solid var(--border);
+    color: var(--text-muted);
+  }
+  .social-btn:last-child { border-right: none; }
+  .social-btn:hover { background: var(--primary-light); color: var(--primary); }
+
+  /* Social icon circles */
+  .social-icons-row { display: flex; justify-content: center; gap: 20px; padding: 14px 16px; border-bottom: 1px solid var(--border); }
+  .soc-icon { width: 48px; height: 48px; border-radius: 50%; background: #efefef; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.15s; flex-shrink: 0; }
+  .soc-icon:hover { background: #e0e0e0; }
+
+  /* Action tiles */
+  .actions {
+    display: flex;
+    border-bottom: 1px solid var(--border);
+  }
+  .action-tile {
+    flex: 1;
+    padding: 12px 8px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    border-right: 1px solid var(--border);
+    color: var(--primary);
+    transition: background 0.15s;
+  }
+  .action-tile:last-child { border-right: none; }
+  .action-tile:hover { background: var(--primary-light); }
+
+  /* Map placeholder */
+  .map-block {
+    height: 160px;
+    background: #e8e8e8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    color: #888;
+    cursor: pointer;
+    border-bottom: 1px solid #e0e0e0;
+    position: relative;
+    overflow: hidden;
+  }
+  .map-block::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 10px,
+      rgba(0,0,0,0.03) 10px,
+      rgba(0,0,0,0.03) 20px
+    );
+  }
+  .map-label {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+  }
+  .map-label strong { display: block; font-size: 14px; color: #555; }
+
+  /* Section label */
+  .section-label {
+    padding: 18px 16px 10px;
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: -0.3px;
+    color: var(--text);
+  }
+
+  /* Bottom spacing */
+  .bottom-space { height: 8px; }
+
+  /* Breadcrumb */
+  .breadcrumb {
+    padding: 8px 16px;
+    font-size: 11px;
+    color: #aaa;
+    border-bottom: 1px solid #f0f0f0;
+    background: #fafafa;
+  }
+  .breadcrumb a {
+    color: #888;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .breadcrumb a:hover { text-decoration: underline; }
+
+  /* Schedule — compact */
+  .sched-block { border-bottom: 1px solid var(--border); padding: 10px 16px 12px; }
+  .sched-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #bbb; margin-bottom: 7px; }
+  .sched-row { display: flex; justify-content: space-between; font-size: 12px; padding: 3px 0; }
+  .sched-row span:first-child { color: var(--text-muted); }
+  .sched-always { color: var(--primary); font-weight: 600; }
+  .sched-time { color: var(--text); font-weight: 600; }
+
+  /* Ratings — chip grid */
+  .ratings-block { border-bottom: 1px solid var(--border); padding: 10px 10px 14px; background: var(--bg-section); }
+  .ratings-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .rating-chip { background: #fff; border-radius: 12px; padding: 10px 12px; text-decoration: none; box-shadow: 0 2px 8px rgba(192,24,96,0.07); display: flex; flex-direction: column; gap: 2px; transition: box-shadow 0.15s; }
+  .rating-chip:hover { box-shadow: 0 4px 14px rgba(192,24,96,0.14); }
+  .chip-score { font-size: 22px; font-weight: 800; color: var(--primary); line-height: 1; }
+  .chip-stars { font-size: 12px; line-height: 1.4; }
+  .chip-name { font-size: 12px; font-weight: 700; color: var(--text); margin-top: 2px; }
+  .chip-count { font-size: 10px; color: var(--text-muted); }
+
+  /* Map */
+  .map-embed { border-bottom: 1px solid var(--border); line-height: 0; }
+  .map-embed iframe { display: block; width: 100%; height: 160px; border: none; }
+  .map-link { display: flex; justify-content: space-between; align-items: center; padding: 11px 16px; font-size: 13px; text-decoration: none; color: var(--text); border-bottom: 1px solid var(--border); transition: background 0.15s; }
+  .map-link:hover { background: var(--primary-light); }
+  .map-link span:last-child { font-size: 12px; color: var(--primary); }
+
+  /* Home phone row */
+  .home-phone { display: flex; align-items: center; justify-content: center; padding: 11px 16px 8px; gap: 10px; }
+  .home-phone .hp-num { font-size: 14px; font-weight: 600; color: var(--text); }
+  .home-phone .hp-call { background: var(--primary); color: #fff; border: none; border-radius: 20px; padding: 8px 16px; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+  .home-phone .hp-call:hover { background: var(--primary-hover); }
+
+  /* Emergency tile */
+  .emergency-tile { background: #1a1a1a !important; color: #fff !important; }
+  .emergency-tile:hover { background: #2a2a2a !important; }
+
+  /* 3-col tiles */
+  .tiles-3 { display: grid; grid-template-columns: repeat(3, 1fr); }
+  .tiles-3 .tile { flex: unset; }
+
+  /* Map address list */
+  .map-addr-list { border-bottom: 1px solid var(--border); }
+  .map-addr-row { display: flex; align-items: center; padding: 9px 16px; border-bottom: 1px solid var(--border-light); cursor: pointer; font-size: 13px; transition: background 0.15s; gap: 10px; }
+  .map-addr-row:last-child { border-bottom: none; }
+  .map-addr-row:hover { background: var(--primary-light); }
+  .map-addr-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--primary); flex-shrink: 0; }
+  .map-addr-name { font-weight: 600; font-size: 13px; color: var(--text); }
+  .map-addr-street { font-size: 11px; color: var(--text-muted); }
+
+  /* Promo cards */
+  .promo-list { padding: 12px 14px; }
+  .promo-card { border: 1px solid var(--border); border-radius: 10px; padding: 14px; margin-bottom: 10px; cursor: pointer; transition: background 0.15s, border-color 0.15s; position: relative; }
+  .promo-card:last-child { margin-bottom: 0; }
+  .promo-card:hover { background: var(--primary-light); border-color: var(--primary); }
+  .promo-card::after { content: '→'; position: absolute; right: 14px; top: 50%; transform: translateY(-50%); font-size: 16px; color: #bbb; }
+  .promo-clinic { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--primary); font-weight: 700; margin-bottom: 4px; }
+  .promo-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 4px; padding-right: 20px; }
+  .promo-desc { font-size: 12px; color: var(--text-muted); line-height: 1.4; padding-right: 20px; }
+  .promo-badge { display: inline-block; background: var(--primary-light); border-radius: 20px; padding: 4px 12px; font-size: 11px; font-weight: 600; color: var(--primary); margin-top: 8px; }
+
+  /* Jobs screen */
+  .job-section { background: #fff; padding: 20px; border-bottom: 1px solid var(--border); }
+  .hero-title { font-size: 24px; font-weight: 700; line-height: 1.2; margin-bottom: 8px; white-space: nowrap; color: var(--text); }
+  .hero-sub { font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-bottom: 16px; }
+  .hero-stats { display: flex; gap: 8px; }
+  .hero-stat { flex: 1; background: var(--primary-light); border-radius: 8px; padding: 10px 8px; text-align: center; }
+  .hero-stat strong { display: block; font-size: 16px; font-weight: 700; color: var(--primary); }
+  .hero-stat span { font-size: 11px; color: var(--text-muted); }
+  .reasons { display: flex; flex-direction: column; gap: 12px; margin-top: 16px; }
+  .reason { display: flex; gap: 12px; align-items: flex-start; }
+  .reason-icon { width: 32px; height: 32px; background: var(--primary-light); border-radius: 8px; flex-shrink: 0; }
+  .reason-text strong { display: block; font-size: 13px; font-weight: 600; margin-bottom: 2px; color: var(--text); }
+  .reason-text span { font-size: 12px; color: var(--text-muted); line-height: 1.4; }
+  .clinic-group { margin-bottom: 18px; }
+  .clinic-group:last-child { margin-bottom: 0; }
+  .clinic-name { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: #bbb; margin-bottom: 8px; }
+  .vacancy-card { border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; margin-bottom: 6px; cursor: pointer; transition: background 0.15s, border-color 0.15s; display: flex; justify-content: space-between; align-items: center; }
+  .vacancy-card:hover { background: var(--primary-light); border-color: var(--primary); }
+  .vacancy-card:last-child { margin-bottom: 0; }
+  .vacancy-title { font-size: 13px; font-weight: 600; color: var(--text); }
+  .vacancy-meta { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+  .vacancy-arrow { font-size: 16px; color: var(--primary); }
+  .hr-block { background: var(--primary-light); border-radius: 10px; padding: 16px; }
+  .hr-name { font-size: 14px; font-weight: 600; margin-bottom: 4px; color: var(--text); }
+  .hr-role { font-size: 12px; color: var(--text-muted); margin-bottom: 14px; }
+  .hr-btn { flex: 1; padding: 12px 0; text-align: center; border-radius: 30px; font-size: 13px; font-weight: 700; cursor: pointer; border: none; background: var(--primary); color: #fff; width: 100%; }
+  .hr-btn:hover { background: var(--primary-hover); }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #333;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 13px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+    z-index: 100;
+    white-space: nowrap;
+  }
+  .toast.show { opacity: 1; }
+</style>
+</head>
+<body>
+
+<!-- SCREEN: alfa-group (umbrella) -->
+<div class="screen active" id="screen-home">
+  <div class="logo-block" style="padding:16px 20px 0; border-bottom:none;">
+    <img src="source/шапка.jpg" alt="@ АЛЬФА" style="max-width:100%;height:auto;display:block;margin:0 auto;">
+  </div>
+
+  <div style="padding:10px 20px 16px; border-bottom:1px solid var(--border); text-align:center; display:flex; flex-direction:column; gap:4px;">
+    <div style="font-size:15px; font-weight:700; color:var(--primary);">Медицинская группа Альфа</div>
+    <div style="font-size:15px; font-weight:700; color:var(--text);">Экспертная медицина</div>
+    <div style="font-size:15px; font-weight:700; color:var(--text);">Удобство пациентов</div>
+  </div>
+
+  <div style="border-bottom:1px solid var(--border); background:var(--bg-section);">
+    <div class="home-phone">
+      <span class="hp-num">8(800) 505-73-15</span>
+      <button class="hp-call" onclick="toast('Звоним: 8(800) 505-73-15')"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C8.6 21 3 15.4 3 8.5c0-.6.4-1 1-1H7.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg></button>
+    </div>
+    <div class="tiles" style="border-bottom:none; background:transparent; padding-top:0;">
+      <div class="tile" onclick="goScreen('jobs')">Вакансии</div>
+      <div class="tile" onclick="goScreen('about')">О нас</div>
+    </div>
+  </div>
+
+  <div class="section-label">Медцентры</div>
+  <div class="tiles">
+    <div class="tile full" onclick="goScreen('alfa')" style="text-align:center;">Многопрофильный медцентр</div>
+    <div class="tile" onclick="goScreen('line')">Женский<br>медцентр</div>
+    <div class="tile" onclick="goScreen('kids')">Детский<br>медцентр</div>
+    <div class="tile" onclick="goScreen('emergency')">Скорая помощь</div>
+    <div class="tile" onclick="goScreen('lab')">Лаборатория</div>
+    <div class="tile" onclick="window.open('https://medcentralfa.ru/lichnyy-kabinet.html#/appointments','_blank')">Личный кабинет ↗</div>
+    <div class="tile" onclick="goScreen('promo')">Акции</div>
+  </div>
+
+  <div class="section-label">Партнёрские клиники</div>
+  <div class="tiles">
+    <div class="tile" onclick="goScreen('docs')">Справки<br>медосмотры</div>
+    <div class="tile" onclick="goScreen('stom')">Стоматология</div>
+  </div>
+
+  <div class="section-label">Страховые компании</div>
+  <div style="padding:0 16px 16px; border-bottom:1px solid var(--border);">
+    <div id="ins-tags" style="display:flex;flex-wrap:wrap;gap:6px;overflow:hidden;max-height:72px;">
+      <div style="padding:7px 13px;background:#f5f5f5;border-radius:20px;font-size:12px;font-weight:600;color:#444;">СОГАЗ</div>
+      <div style="padding:7px 13px;background:#f5f5f5;border-radius:20px;font-size:12px;font-weight:600;color:#444;">Ингосстрах</div>
+      <div style="padding:7px 13px;background:#f5f5f5;border-radius:20px;font-size:12px;font-weight:600;color:#444;">Ренессанс</div>
+      <div style="padding:7px 13px;background:#f5f5f5;border-radius:20px;font-size:12px;font-weight:600;color:#444;">АльфаСтрахование</div>
+      <div style="padding:7px 13px;background:#f5f5f5;border-radius:20px;font-size:12px;font-weight:600;color:#444;">РЕСО-Гарантия</div>
+      <div style="padding:7px 13px;background:#f5f5f5;border-radius:20px;font-size:12px;font-weight:600;color:#444;">ВСК</div>
+      <div style="padding:7px 13px;background:#f5f5f5;border-radius:20px;font-size:12px;font-weight:600;color:#444;">Зетта</div>
+      <div style="padding:7px 13px;background:#f5f5f5;border-radius:20px;font-size:12px;font-weight:600;color:#444;">МАКС</div>
+      <div style="padding:7px 13px;background:#f5f5f5;border-radius:20px;font-size:12px;font-weight:600;color:#444;">Согласие</div>
+      <div style="padding:7px 13px;background:#f5f5f5;border-radius:20px;font-size:12px;font-weight:600;color:#444;">Росгосстрах</div>
+    </div>
+    <button onclick="(function(){var el=document.getElementById('ins-tags'),btn=this;if(el.style.maxHeight==='none'){el.style.maxHeight='72px';btn.textContent='Полный список ↓';}else{el.style.maxHeight='none';btn.textContent='Свернуть ↑';}}).call(this)" style="margin-top:8px;background:none;border:none;font-size:12px;color:var(--primary);font-weight:600;cursor:pointer;padding:0;display:block;width:100%;text-align:center;">Полный список ↓</button>
+  </div>
+
+  <!-- БЛОК: Документы -->
+  <div class="section-label">Документы</div>
+  <div style="padding:0 16px 16px;border-bottom:1px solid #e0e0e0;">
+    <div id="docs-list" style="display:flex;flex-direction:column;gap:8px;overflow:hidden;max-height:96px;">
+      <div style="font-size:13px;padding:10px 12px;background:#f7f7f7;border-radius:6px;color:#444;">Лицензия Минздрава РФ</div>
+      <div style="font-size:13px;padding:10px 12px;background:#f7f7f7;border-radius:6px;color:#444;">Свидетельство о регистрации</div>
+      <div style="font-size:13px;padding:10px 12px;background:#f7f7f7;border-radius:6px;color:#444;">Лицензия АЛЬФА СМАЙЛ</div>
+      <div style="font-size:13px;padding:10px 12px;background:#f7f7f7;border-radius:6px;color:#444;">Политика конфиденциальности</div>
+      <div style="font-size:13px;padding:10px 12px;background:#f7f7f7;border-radius:6px;color:#444;">Пользовательское соглашение</div>
+    </div>
+    <button onclick="(function(){var el=document.getElementById('docs-list'),btn=this;if(el.style.maxHeight==='none'){el.style.maxHeight='96px';btn.textContent='Полный список ↓';}else{el.style.maxHeight='none';btn.textContent='Свернуть ↑';}}).call(this)" style="margin-top:8px;background:none;border:none;font-size:12px;color:var(--primary);font-weight:600;cursor:pointer;padding:0;display:block;width:100%;text-align:center;">Полный список ↓</button>
+  </div>
+
+  <div class="bottom-space"></div>
+</div>
+
+
+<!-- SCREEN: @ АЛЬФА (многопрофильный) -->
+<div class="screen" id="screen-alfa">
+  <div class="nav-header">
+    <div style="display:flex"><button class="nav-arrow" onclick="goScreen('lab')">←</button><button class="nav-arrow" onclick="goScreen('line')">→</button></div>
+  </div>
+
+  <div class="logo-block">
+    <div class="logo-main">@ АЛЬФА</div>
+    <div class="logo-sub">Многопрофильный медцентр</div>
+  </div>
+
+  <div class="slider-block">
+    <div class="slider-inner" id="slider-alfa">
+      <div class="slide active">
+        <div class="slider-content">
+          <button class="slide-arrow" onclick="prevSlide('alfa')">←</button>
+          <div class="slide-text">
+            <div class="slide-item">Экспертная<br>медицина<span>30+ направлений</span></div>
+            <div class="slide-item">Удобный<br>сервис<span>онлайн-запись</span></div>
+          </div>
+          <button class="slide-arrow" onclick="nextSlide('alfa')">→</button>
+        </div>
+      </div>
+      <div class="slide">
+        <div class="slider-content">
+          <button class="slide-arrow" onclick="prevSlide('alfa')">←</button>
+          <div class="slide-text">
+            <div class="slide-item">Стационар<br>и хирургия<span>круглосуточно</span></div>
+            <div class="slide-item">35 000+<br>операций<span>за 12 лет</span></div>
+          </div>
+          <button class="slide-arrow" onclick="nextSlide('alfa')">→</button>
+        </div>
+      </div>
+    </div>
+    <div class="dots" id="dots-alfa">
+      <button class="dot active" onclick="goSlide('alfa',0)"></button>
+      <button class="dot" onclick="goSlide('alfa',1)"></button>
+    </div>
+  </div>
+
+  <!-- Единый блок: телефон → иконки -->
+  <div style="border-bottom:1px solid var(--border); background:var(--bg-section);">
+    <div class="home-phone">
+      <span class="hp-num">8(800) 505-73-15</span>
+      <button class="hp-call" onclick="toast('Звоним: 8(800) 505-73-15')"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C8.6 21 3 15.4 3 8.5c0-.6.4-1 1-1H7.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg></button>
+    </div>
+    <div class="tiles" style="border-bottom:none; background:transparent; padding-top:0;">
+      <div class="tile" onclick="window.open('https://medcentralfa.ru/to-enroll-online.html','_blank')">Онлайн-запись ↗</div>
+      <div class="tile" onclick="window.open('https://medcentralfa.ru/lichnyy-kabinet.html#/appointments','_blank')">Личный кабинет ↗</div>
+    </div>
+    <div class="tiles tiles-3" style="border-bottom:none; background:transparent; padding-top:0;">
+      <div class="tile" onclick="goScreen('alfa-services')">Услуги</div>
+      <div class="tile" onclick="goScreen('promo')">Акции</div>
+      <div class="tile" onclick="window.open('https://medcentralfa.ru','_blank')">Сайт ↗</div>
+    </div>
+    <div class="social-icons-row" style="border-bottom:none;">
+    <button class="soc-icon" onclick="window.open('https://vk.com/medcentralfa_anapa','_blank')" title="ВКонтакте">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="#4a4a4a"><path d="M6.79 7.3H4.05c.13 6.24 3.25 9.99 8.72 9.99h.31v-3.57c2.01.2 3.53 1.67 4.14 3.57h2.84c-.78-2.84-2.83-4.41-4.11-5.01 1.28-.74 3.08-2.54 3.51-4.98h-2.58c-.56 1.98-2.22 3.78-3.8 3.95V7.3H10.5v6.92c-1.6-.4-3.62-2.34-3.71-6.92Z"/></svg>
+    </button>
+    <button class="soc-icon" onclick="window.open('https://t.me/mcalfa_anapa','_blank')" title="Telegram">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="#4a4a4a"><path d="M16.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+    </button>
+    <button class="soc-icon" onclick="" title="Макс">
+      <svg width="28" height="28" viewBox="0 0 1000 1000">
+        <path fill="#efefef" d="M634.4 0H365.6C64.5 0 0 64.6 0 365.6v268.8C0 935.5 64.6 1000 365.6 1000h268.8c301.1 0 365.6-64.6 365.6-365.6V365.6C1000 64.5 935.4 0 634.4 0"/>
+        <path fill="#4a4a4a" fill-rule="evenodd" clip-rule="evenodd" d="M508.211 878.328c-75.007 0-109.864-10.95-170.453-54.75-38.325 49.275-159.686 87.783-164.979 21.9 0-49.456-10.95-91.248-23.36-136.873-14.782-56.21-31.572-118.807-31.572-209.508 0-216.626 177.754-379.597 388.357-379.597 210.786 0 375.947 171.001 375.947 381.604.707 207.347-166.595 376.118-373.94 377.224m3.103-571.585c-102.564-5.292-182.499 65.7-200.201 177.024-14.6 92.162 11.315 204.398 33.397 210.238 10.585 2.555 37.23-18.98 53.837-35.587a189.8 189.8 0 0 0 92.71 33.032c106.273 5.112 197.08-75.794 204.215-181.95 4.154-106.382-77.67-196.486-183.958-202.574z"/>
+      </svg>
+    </button>
+  </div>
+  </div>
+
+  <!-- График -->
+  <div class="section-label">График работы</div>
+  <div class="sched-block">
+    <div class="sched-row"><span>Медцентр, стационар, скорая</span><span class="sched-always">круглосуточно</span></div>
+    <div class="sched-row"><span>Травмпункт</span><span class="sched-time">8:00 – 23:00</span></div>
+    <div class="sched-row"><span>МРТ / КТ / рентген</span><span class="sched-time">8:00 – 24:00</span></div>
+    <div class="sched-row"><span>Лаборатория</span><span class="sched-time">8:00 – 19:30</span></div>
+  </div>
+
+  <!-- Адрес и карта -->
+  <div class="section-label">Адрес</div>
+  <div class="map-embed">
+    <iframe src="https://yandex.ru/map-widget/v1/?ol=biz&oid=1475633865" title="Карта"></iframe>
+  </div>
+  <a class="map-link" href="https://yandex.com/maps/org/alfa/1475633865/" target="_blank">
+    <span>📍 ул. Владимирская, 93</span><span>Яндекс.Карты →</span>
+  </a>
+
+  <!-- Рейтинги -->
+  <div class="section-label">Рейтинги</div>
+  <div class="ratings-block">
+    <div class="ratings-grid">
+      <a class="rating-chip" href="https://prodoctorov.ru" target="_blank">
+        <div class="chip-score">5.0</div>
+        <div class="chip-stars"><span style="color:#f59e0b">★★★★★</span></div>
+        <div class="chip-name">ПроДокторов</div>
+        <div class="chip-count">1 000 отзывов</div>
+      </a>
+      <a class="rating-chip" href="https://yandex.ru/maps/org/alfa/1475633865/" target="_blank">
+        <div class="chip-score">5.0</div>
+        <div class="chip-stars"><span style="color:#f59e0b">★★★★★</span></div>
+        <div class="chip-name">Яндекс</div>
+        <div class="chip-count">1 000 отзывов</div>
+      </a>
+      <a class="rating-chip" href="https://sberzdorovye.ru" target="_blank">
+        <div class="chip-score">5.0</div>
+        <div class="chip-stars"><span style="color:#f59e0b">★★★★★</span></div>
+        <div class="chip-name">СберЗдоровье</div>
+        <div class="chip-count">1 000 отзывов</div>
+      </a>
+      <a class="rating-chip" href="https://napopravku.ru" target="_blank">
+        <div class="chip-score">5.0</div>
+        <div class="chip-stars"><span style="color:#f59e0b">★★★★★</span></div>
+        <div class="chip-name">НаПоправку</div>
+        <div class="chip-count">1 000 отзывов</div>
+      </a>
+    </div>
+  </div>
+
+  <div class="bottom-space"></div>
+</div>
+
+
+<!-- SCREEN: АЛЬФА ЛИНИЯ (женский) -->
+<div class="screen" id="screen-line">
+  <div class="nav-header">
+    <div style="display:flex"><button class="nav-arrow" onclick="goScreen('alfa')">←</button><button class="nav-arrow" onclick="goScreen('kids')">→</button></div>
+  </div>
+
+  <div class="logo-block">
+    <div class="logo-main">АЛЬФА ЛИНИЯ</div>
+    <div class="logo-sub">женский медцентр</div>
+  </div>
+
+  <div class="slider-block">
+    <div class="slider-inner" id="slider-line">
+      <div class="slide active">
+        <div class="slider-content">
+          <button class="slide-arrow" onclick="prevSlide('line')">←</button>
+          <div class="slide-text">
+            <div class="slide-item">Экспертная<br>медицина<span>гинекология, ЭКО</span></div>
+            <div class="slide-item">Удобный<br>сервис<span>онлайн-запись</span></div>
+          </div>
+          <button class="slide-arrow" onclick="nextSlide('line')">→</button>
+        </div>
+      </div>
+      <div class="slide">
+        <div class="slider-content">
+          <button class="slide-arrow" onclick="prevSlide('line')">←</button>
+          <div class="slide-text">
+            <div class="slide-item">Ведение<br>беременности<span>с 0 до 40 недель</span></div>
+            <div class="slide-item">Женское<br>здоровье<span>все специалисты</span></div>
+          </div>
+          <button class="slide-arrow" onclick="nextSlide('line')">→</button>
+        </div>
+      </div>
+    </div>
+    <div class="dots" id="dots-line">
+      <button class="dot active" onclick="goSlide('line',0)"></button>
+      <button class="dot" onclick="goSlide('line',1)"></button>
+    </div>
+  </div>
+
+  <!-- Единый блок: телефон → иконки -->
+  <div style="border-bottom:1px solid var(--border); background:var(--bg-section);">
+    <div class="home-phone">
+      <span class="hp-num">8(800) 511-73-72</span>
+      <button class="hp-call" onclick="toast('Звоним: 8(800) 511-73-72')"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C8.6 21 3 15.4 3 8.5c0-.6.4-1 1-1H7.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg></button>
+    </div>
+    <div class="tiles" style="border-bottom:none; background:transparent; padding-top:0;">
+      <div class="tile" onclick="window.open('https://alfamedline.ru/to-enroll-online/','_blank')">Онлайн-запись ↗</div>
+      <div class="tile" onclick="window.open('https://medcentralfa.ru/lichnyy-kabinet.html#/appointments','_blank')">Личный кабинет ↗</div>
+    </div>
+    <div class="tiles tiles-3" style="border-bottom:none; background:transparent; padding-top:0;">
+      <div class="tile" onclick="toast('Услуги')">Услуги</div>
+      <div class="tile" onclick="goScreen('promo')">Акции</div>
+      <div class="tile" onclick="window.open('https://alfamedline.ru','_blank')">Сайт ↗</div>
+    </div>
+    <div class="social-icons-row" style="border-bottom:none;">
+      <button class="soc-icon" onclick="window.open('https://vk.com/alfaline_anapa','_blank')" title="ВКонтакте">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="#4a4a4a"><path d="M6.79 7.3H4.05c.13 6.24 3.25 9.99 8.72 9.99h.31v-3.57c2.01.2 3.53 1.67 4.14 3.57h2.84c-.78-2.84-2.83-4.41-4.11-5.01 1.28-.74 3.08-2.54 3.51-4.98h-2.58c-.56 1.98-2.22 3.78-3.8 3.95V7.3H10.5v6.92c-1.6-.4-3.62-2.34-3.71-6.92Z"/></svg>
+      </button>
+      <button class="soc-icon" onclick="window.open('https://t.me/mcalfa_anapa','_blank')" title="Telegram">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="#4a4a4a"><path d="M16.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+      </button>
+      <button class="soc-icon" onclick="" title="Макс">
+        <svg width="28" height="28" viewBox="0 0 1000 1000">
+          <path fill="#efefef" d="M634.4 0H365.6C64.5 0 0 64.6 0 365.6v268.8C0 935.5 64.6 1000 365.6 1000h268.8c301.1 0 365.6-64.6 365.6-365.6V365.6C1000 64.5 935.4 0 634.4 0"/>
+          <path fill="#4a4a4a" fill-rule="evenodd" clip-rule="evenodd" d="M508.211 878.328c-75.007 0-109.864-10.95-170.453-54.75-38.325 49.275-159.686 87.783-164.979 21.9 0-49.456-10.95-91.248-23.36-136.873-14.782-56.21-31.572-118.807-31.572-209.508 0-216.626 177.754-379.597 388.357-379.597 210.786 0 375.947 171.001 375.947 381.604.707 207.347-166.595 376.118-373.94 377.224m3.103-571.585c-102.564-5.292-182.499 65.7-200.201 177.024-14.6 92.162 11.315 204.398 33.397 210.238 10.585 2.555 37.23-18.98 53.837-35.587a189.8 189.8 0 0 0 92.71 33.032c106.273 5.112 197.08-75.794 204.215-181.95 4.154-106.382-77.67-196.486-183.958-202.574z"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- График -->
+  <div class="section-label">График работы</div>
+  <div class="sched-block">
+    <div class="sched-row"><span>Приём специалистов</span><span class="sched-time">8:00 – 20:00</span></div>
+  </div>
+
+  <!-- Адрес -->
+  <div class="section-label">Адрес</div>
+  <div class="map-embed">
+    <iframe src="https://yandex.ru/map-widget/v1/?ol=biz&oid=130201831406" title="Карта"></iframe>
+  </div>
+  <a class="map-link" href="https://yandex.com/maps/org/alfa_liniya/130201831406/" target="_blank">
+    <span>📍 ул. Ленина, 158</span><span>Яндекс.Карты →</span>
+  </a>
+
+  <!-- Рейтинги -->
+  <div class="section-label">Рейтинги</div>
+  <div class="ratings-block">
+    <div class="ratings-grid">
+      <a class="rating-chip" href="https://prodoctorov.ru" target="_blank">
+        <div class="chip-score">5.0</div>
+        <div class="chip-stars"><span style="color:#f59e0b">★★★★★</span></div>
+        <div class="chip-name">ПроДокторов</div>
+        <div class="chip-count">1 000 отзывов</div>
+      </a>
+      <a class="rating-chip" href="https://yandex.com/maps/org/alfa_liniya/130201831406/" target="_blank">
+        <div class="chip-score">5.0</div>
+        <div class="chip-stars"><span style="color:#f59e0b">★★★★★</span></div>
+        <div class="chip-name">Яндекс</div>
+        <div class="chip-count">1 000 отзывов</div>
+      </a>
+      <a class="rating-chip" href="https://sberzdorovye.ru" target="_blank">
+        <div class="chip-score">5.0</div>
+        <div class="chip-stars"><span style="color:#f59e0b">★★★★★</span></div>
+        <div class="chip-name">СберЗдоровье</div>
+        <div class="chip-count">1 000 отзывов</div>
+      </a>
+      <a class="rating-chip" href="https://napopravku.ru" target="_blank">
+        <div class="chip-score">5.0</div>
+        <div class="chip-stars"><span style="color:#f59e0b">★★★★★</span></div>
+        <div class="chip-name">НаПоправку</div>
+        <div class="chip-count">1 000 отзывов</div>
+      </a>
+    </div>
+  </div>
+
+  <div class="bottom-space"></div>
+</div>
+
+
+<!-- SCREEN: АЛЬФА КИДС (детский) -->
+<div class="screen" id="screen-kids">
+  <div class="nav-header">
+    <div style="display:flex"><button class="nav-arrow" onclick="goScreen('line')">←</button><button class="nav-arrow" onclick="goScreen('emergency')">→</button></div>
+  </div>
+
+  <div class="logo-block">
+    <div class="logo-main">АЛЬФА KIDS</div>
+    <div class="logo-sub">детский медцентр</div>
+  </div>
+
+  <div class="slider-block">
+    <div class="slider-inner" id="slider-kids">
+      <div class="slide active">
+        <div class="slider-content">
+          <button class="slide-arrow" onclick="prevSlide('kids')">←</button>
+          <div class="slide-text">
+            <div class="slide-item">Экспертная<br>педиатрия<span>с рождения</span></div>
+            <div class="slide-item">Удобный<br>сервис<span>онлайн-запись</span></div>
+          </div>
+          <button class="slide-arrow" onclick="nextSlide('kids')">→</button>
+        </div>
+      </div>
+      <div class="slide">
+        <div class="slider-content">
+          <button class="slide-arrow" onclick="prevSlide('kids')">←</button>
+          <div class="slide-text">
+            <div class="slide-item">Вакцинация<br>и профосмотры<span>по возрасту</span></div>
+            <div class="slide-item">Детские<br>специалисты<span>все профили</span></div>
+          </div>
+          <button class="slide-arrow" onclick="nextSlide('kids')">→</button>
+        </div>
+      </div>
+    </div>
+    <div class="dots" id="dots-kids">
+      <button class="dot active" onclick="goSlide('kids',0)"></button>
+      <button class="dot" onclick="goSlide('kids',1)"></button>
+    </div>
+  </div>
+
+  <!-- Единый блок: телефон → иконки -->
+  <div style="border-bottom:1px solid var(--border); background:var(--bg-section);">
+    <div class="home-phone">
+      <span class="hp-num">8(800) 511-03-07</span>
+      <button class="hp-call" onclick="toast('Звоним: 8(800) 511-03-07')"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C8.6 21 3 15.4 3 8.5c0-.6.4-1 1-1H7.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg></button>
+    </div>
+    <div class="tiles" style="border-bottom:none; background:transparent; padding-top:0;">
+      <div class="tile" onclick="window.open('https://anapakids.ru/to-enroll-online.html','_blank')">Онлайн-запись ↗</div>
+      <div class="tile" onclick="window.open('https://anapakids.ru/personal-account.html#/files','_blank')">Личный кабинет ↗</div>
+    </div>
+    <div class="tiles tiles-3" style="border-bottom:none; background:transparent; padding-top:0;">
+      <div class="tile" onclick="toast('Услуги')">Услуги</div>
+      <div class="tile" onclick="goScreen('promo')">Акции</div>
+      <div class="tile" onclick="window.open('https://anapakids.ru','_blank')">Сайт ↗</div>
+    </div>
+    <div class="social-icons-row" style="border-bottom:none;">
+      <button class="soc-icon" onclick="window.open('https://vk.com/alfaline_anapa','_blank')" title="ВКонтакте">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="#4a4a4a"><path d="M6.79 7.3H4.05c.13 6.24 3.25 9.99 8.72 9.99h.31v-3.57c2.01.2 3.53 1.67 4.14 3.57h2.84c-.78-2.84-2.83-4.41-4.11-5.01 1.28-.74 3.08-2.54 3.51-4.98h-2.58c-.56 1.98-2.22 3.78-3.8 3.95V7.3H10.5v6.92c-1.6-.4-3.62-2.34-3.71-6.92Z"/></svg>
+      </button>
+      <button class="soc-icon" onclick="window.open('https://t.me/mcalfa_anapa','_blank')" title="Telegram">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="#4a4a4a"><path d="M16.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+      </button>
+      <button class="soc-icon" onclick="" title="Макс">
+        <svg width="28" height="28" viewBox="0 0 1000 1000">
+          <path fill="#efefef" d="M634.4 0H365.6C64.5 0 0 64.6 0 365.6v268.8C0 935.5 64.6 1000 365.6 1000h268.8c301.1 0 365.6-64.6 365.6-365.6V365.6C1000 64.5 935.4 0 634.4 0"/>
+          <path fill="#4a4a4a" fill-rule="evenodd" clip-rule="evenodd" d="M508.211 878.328c-75.007 0-109.864-10.95-170.453-54.75-38.325 49.275-159.686 87.783-164.979 21.9 0-49.456-10.95-91.248-23.36-136.873-14.782-56.21-31.572-118.807-31.572-209.508 0-216.626 177.754-379.597 388.357-379.597 210.786 0 375.947 171.001 375.947 381.604.707 207.347-166.595 376.118-373.94 377.224m3.103-571.585c-102.564-5.292-182.499 65.7-200.201 177.024-14.6 92.162 11.315 204.398 33.397 210.238 10.585 2.555 37.23-18.98 53.837-35.587a189.8 189.8 0 0 0 92.71 33.032c106.273 5.112 197.08-75.794 204.215-181.95 4.154-106.382-77.67-196.486-183.958-202.574z"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- График -->
+  <div class="section-label">График работы</div>
+  <div class="sched-block">
+    <div class="sched-row"><span>Приём специалистов</span><span class="sched-time">8:00 – 20:00</span></div>
+  </div>
+
+  <!-- Адрес -->
+  <div class="section-label">Адрес</div>
+  <div class="map-embed">
+    <iframe src="https://yandex.ru/map-widget/v1/?ol=biz&oid=36575996778" title="Карта"></iframe>
+  </div>
+  <a class="map-link" href="https://yandex.com/maps/org/alfa_kids/36575996778/" target="_blank">
+    <span>📍 ул. Астраханская, 98</span><span>Яндекс.Карты →</span>
+  </a>
+
+  <!-- Рейтинги -->
+  <div class="section-label">Рейтинги</div>
+  <div class="ratings-block">
+    <div class="ratings-grid">
+      <a class="rating-chip" href="https://prodoctorov.ru" target="_blank">
+        <div class="chip-score">5.0</div>
+        <div class="chip-stars"><span style="color:#f59e0b">★★★★★</span></div>
+        <div class="chip-name">ПроДокторов</div>
+        <div class="chip-count">1 000 отзывов</div>
+      </a>
+      <a class="rating-chip" href="https://yandex.com/maps/org/alfa_kids/36575996778/" target="_blank">
+        <div class="chip-score">5.0</div>
+        <div class="chip-stars"><span style="color:#f59e0b">★★★★★</span></div>
+        <div class="chip-name">Яндекс</div>
+        <div class="chip-count">1 000 отзывов</div>
+      </a>
+      <a class="rating-chip" href="https://sberzdorovye.ru" target="_blank">
+        <div class="chip-score">5.0</div>
+        <div class="chip-stars"><span style="color:#f59e0b">★★★★★</span></div>
+        <div class="chip-name">СберЗдоровье</div>
+        <div class="chip-count">1 000 отзывов</div>
+      </a>
+      <a class="rating-chip" href="https://napopravku.ru" target="_blank">
+        <div class="chip-score">5.0</div>
+        <div class="chip-stars"><span style="color:#f59e0b">★★★★★</span></div>
+        <div class="chip-name">НаПоправку</div>
+        <div class="chip-count">1 000 отзывов</div>
+      </a>
+    </div>
+  </div>
+
+  <div class="bottom-space"></div>
+</div>
+
+
+<!-- SCREEN: Услуги (@ АЛЬФА) -->
+<div class="screen" id="screen-alfa-services">
+  <div class="nav-header">
+    <button class="nav-arrow" onclick="goScreen('alfa')">←</button>
+    <div class="label">Услуги</div>
+    <button class="nav-arrow hidden">→</button>
+  </div>
+
+  <div class="breadcrumb">
+    <a onclick="goScreen('home')">@ АЛЬФА</a> / <a onclick="goScreen('alfa')">многопрофильный</a> / услуги
+  </div>
+
+  <div class="tiles">
+    <div class="tile" onclick="toast('Кардиология')">Кардиология</div>
+    <div class="tile" onclick="toast('Неврология')">Неврология</div>
+    <div class="tile" onclick="toast('Гинекология')">Гинекология</div>
+    <div class="tile" onclick="toast('Урология')">Урология</div>
+    <div class="tile" onclick="toast('Онкология')">Онкология</div>
+    <div class="tile" onclick="toast('Офтальмология')">Офтальмология</div>
+    <div class="tile" onclick="toast('Травматология')">Травматология</div>
+    <div class="tile" onclick="toast('Эндокринология')">Эндокринология</div>
+    <div class="tile" onclick="toast('МРТ')">МРТ</div>
+    <div class="tile" onclick="toast('КТ')">КТ</div>
+    <div class="tile" onclick="toast('УЗИ')">УЗИ</div>
+    <div class="tile" onclick="toast('Лаборатория')">Лаборатория</div>
+    <div class="tile full" onclick="toast('Все услуги')">Все направления →</div>
+  </div>
+
+  <div class="bottom-space"></div>
+</div>
+
+
+<!-- SCREEN: О нас -->
+<div class="screen" id="screen-about">
+  <div class="nav-header">
+    <button class="nav-arrow hidden">←</button>
+    <div class="label">О нас</div>
+    <button class="nav-arrow hidden">→</button>
+  </div>
+
+  <!-- БЛОК 1+2: О нас -->
+  <div style="padding:24px 20px 20px; border-bottom:1px solid #e0e0e0;">
+    <div style="font-size:22px;font-weight:700;line-height:1.25;margin-bottom:10px;">С 2012 года заботимся о здоровье Анапы</div>
+    <div style="font-size:13px;color:#555;line-height:1.6;margin-bottom:14px;">Медицинская группа «Альфа» — крупнейший частный медицинский холдинг Анапы. Объединяем Многопрофильный медцентр, женскую и детскую клиники. Делаем экспертную медицину доступной каждому жителю региона — без поездки в столицу.</div>
+    <div style="margin-top:14px;display:flex;flex-direction:column;gap:8px;">
+      <div style="display:flex;align-items:flex-start;gap:10px;font-size:13px;color:#444;">
+        <span style="flex-shrink:0;margin-top:1px;">◆</span>
+        <span>Доказательная медицина — только протоколы с доказанной эффективностью</span>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:10px;font-size:13px;color:#444;">
+        <span style="flex-shrink:0;margin-top:1px;">◆</span>
+        <span>Доступность — круглосуточная работа, онлайн-запись, единый номер</span>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:10px;font-size:13px;color:#444;">
+        <span style="flex-shrink:0;margin-top:1px;">◆</span>
+        <span>Забота о семье — клиники для взрослых, женщин и детей под одним брендом</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- БЛОК: История — таймлайн -->
+  <div style="padding:18px 20px;border-bottom:1px solid #e0e0e0;">
+    <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#aaa;margin-bottom:16px;">История</div>
+    <div style="display:flex;flex-direction:column;gap:0;">
+
+      <div style="display:flex;gap:14px;">
+        <div style="display:flex;flex-direction:column;align-items:center;">
+          <div style="width:10px;height:10px;border-radius:50%;background:#222;flex-shrink:0;margin-top:3px;"></div>
+          <div style="width:2px;flex:1;background:#e0e0e0;margin:4px 0;"></div>
+        </div>
+        <div style="padding-bottom:16px;">
+          <div style="font-size:12px;font-weight:700;color:#888;">2012</div>
+          <div style="font-size:13px;font-weight:600;color:#222;margin-top:2px;">Открытие @ АЛЬФА</div>
+          <div style="font-size:12px;color:#666;margin-top:2px;">Многопрофильный медцентр на ул. Владимирской, 93 — первая частная клиника такого масштаба в Анапе</div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:14px;">
+        <div style="display:flex;flex-direction:column;align-items:center;">
+          <div style="width:10px;height:10px;border-radius:50%;background:#222;flex-shrink:0;margin-top:3px;"></div>
+          <div style="width:2px;flex:1;background:#e0e0e0;margin:4px 0;"></div>
+        </div>
+        <div style="padding-bottom:16px;">
+          <div style="font-size:12px;font-weight:700;color:#888;">2016</div>
+          <div style="font-size:13px;font-weight:600;color:#222;margin-top:2px;">Альфа Линия</div>
+          <div style="font-size:12px;color:#666;margin-top:2px;">Открытие специализированного женского медцентра на ул. Ленина, 158</div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:14px;">
+        <div style="display:flex;flex-direction:column;align-items:center;">
+          <div style="width:10px;height:10px;border-radius:50%;background:#222;flex-shrink:0;margin-top:3px;"></div>
+          <div style="width:2px;flex:1;background:#e0e0e0;margin:4px 0;"></div>
+        </div>
+        <div style="padding-bottom:16px;">
+          <div style="font-size:12px;font-weight:700;color:#888;">2019</div>
+          <div style="font-size:13px;font-weight:600;color:#222;margin-top:2px;">Альфа Kids</div>
+          <div style="font-size:12px;color:#666;margin-top:2px;">Детский медцентр на ул. Астраханской, 98 — педиатрия, вакцинация, узкие специалисты</div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:14px;">
+        <div style="display:flex;flex-direction:column;align-items:center;">
+          <div style="width:10px;height:10px;border-radius:50%;background:#222;flex-shrink:0;margin-top:3px;"></div>
+          <div style="width:2px;flex:1;background:#e0e0e0;margin:4px 0;"></div>
+        </div>
+        <div style="padding-bottom:16px;">
+          <div style="font-size:12px;font-weight:700;color:#888;">2022</div>
+          <div style="font-size:13px;font-weight:600;color:#222;margin-top:2px;">500 000 пациентов</div>
+          <div style="font-size:12px;color:#666;margin-top:2px;">Milestone: полмиллиона пациентов через клиники группы</div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:14px;">
+        <div style="display:flex;flex-direction:column;align-items:center;">
+          <div style="width:10px;height:10px;border-radius:50%;background:#222;flex-shrink:0;margin-top:3px;"></div>
+        </div>
+        <div style="padding-bottom:4px;">
+          <div style="font-size:12px;font-weight:700;color:#888;">2024</div>
+          <div style="font-size:13px;font-weight:600;color:#222;margin-top:2px;">Медицинская группа @ АЛЬФА</div>
+          <div style="font-size:12px;color:#666;margin-top:2px;">Объединение трёх клиник под зонтичным брендом</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- БЛОК: Оборудование -->
+  <div style="padding:18px 20px;border-bottom:1px solid #e0e0e0;">
+    <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#aaa;margin-bottom:14px;">Оборудование</div>
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:10px 12px;background:#f7f7f7;border-radius:6px;">
+        <span style="color:#444;">МРТ GE SIGNA Creator 1.5T</span>
+        <span style="font-size:11px;color:#888;font-weight:600;">США</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:10px 12px;background:#f7f7f7;border-radius:6px;">
+        <span style="color:#444;">КТ ANKE ANATOM 64</span>
+        <span style="font-size:11px;color:#888;font-weight:600;">64 среза</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:10px 12px;background:#f7f7f7;border-radius:6px;">
+        <span style="color:#444;">УЗИ GE Vivid T9</span>
+        <span style="font-size:11px;color:#888;font-weight:600;">кардио-класс</span>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="bottom-space"></div>
+</div>
+
+
+<!-- SCREEN: Вакансии -->
+<div class="screen" id="screen-jobs">
+  <div class="nav-header">
+    <button class="nav-arrow hidden">←</button>
+    <button class="nav-arrow hidden">→</button>
+  </div>
+
+  <div class="job-section">
+    <div class="hero-title">Работай с нами</div>
+    <div class="hero-sub">Мы строим сильную команду в трёх клиниках Анапы. Если вы разделяете принципы доказательной медицины и заботы о пациенте — ждём вас.</div>
+    <div class="hero-stats">
+      <div class="hero-stat"><strong>3</strong><span>клиники</span></div>
+      <div class="hero-stat"><strong>150+</strong><span>сотрудников</span></div>
+      <div class="hero-stat"><strong>12 лет</strong><span>на рынке</span></div>
+    </div>
+    <div class="reasons">
+      <div class="reason"><div class="reason-icon"></div><div class="reason-text"><strong>Оборудование мирового уровня</strong><span>МРТ GE, КТ ANKE, УЗИ GE Vivid — работайте на лучшей технике</span></div></div>
+      <div class="reason"><div class="reason-icon"></div><div class="reason-text"><strong>Рост и обучение</strong><span>Оплата конференций, доступ к профессиональной литературе, наставничество</span></div></div>
+      <div class="reason"><div class="reason-icon"></div><div class="reason-text"><strong>Стабильный график</strong><span>Сменный и фиксированный форматы, белая зарплата, оформление по ТК РФ</span></div></div>
+      <div class="reason"><div class="reason-icon"></div><div class="reason-text"><strong>Медицина для своих</strong><span>Сотрудники и их семьи получают услуги клиник по льготным ценам</span></div></div>
+    </div>
+  </div>
+
+  <div class="job-section">
+    <div class="section-label">Отдел персонала</div>
+    <div class="hr-block">
+      <div class="hr-name">Иван Иванов</div>
+      <div class="hr-role">HR-менеджер медицинской группы</div>
+      <button class="hr-btn" onclick="toast('Позвонить: 8 (800) 505-73-15')">Позвонить</button>
+    </div>
+  </div>
+
+  <div class="job-section">
+    <div class="section-label">Открытые вакансии</div>
+    <div class="clinic-group">
+      <div class="clinic-name">@ АЛЬФА — многопрофильный</div>
+      <div class="vacancy-card" onclick="toast('Невролог')"><div><div class="vacancy-title">Невролог</div><div class="vacancy-meta">полная занятость · ул. Владимирская</div></div><div class="vacancy-arrow">›</div></div>
+      <div class="vacancy-card" onclick="toast('Врач-травматолог')"><div><div class="vacancy-title">Врач-травматолог</div><div class="vacancy-meta">сменный график · круглосуточно</div></div><div class="vacancy-arrow">›</div></div>
+      <div class="vacancy-card" onclick="toast('Медицинская сестра')"><div><div class="vacancy-title">Медицинская сестра</div><div class="vacancy-meta">несколько позиций</div></div><div class="vacancy-arrow">›</div></div>
+    </div>
+    <div class="clinic-group">
+      <div class="clinic-name">Альфа Линия — женский медцентр</div>
+      <div class="vacancy-card" onclick="toast('Врач-гинеколог')"><div><div class="vacancy-title">Врач-гинеколог</div><div class="vacancy-meta">полная занятость · ул. Ленина</div></div><div class="vacancy-arrow">›</div></div>
+      <div class="vacancy-card" onclick="toast('Акушерка')"><div><div class="vacancy-title">Акушерка</div><div class="vacancy-meta">сменный график</div></div><div class="vacancy-arrow">›</div></div>
+    </div>
+    <div class="clinic-group">
+      <div class="clinic-name">Альфа Kids — детский медцентр</div>
+      <div class="vacancy-card" onclick="toast('Врач-педиатр')"><div><div class="vacancy-title">Врач-педиатр</div><div class="vacancy-meta">полная занятость · ул. Астраханская</div></div><div class="vacancy-arrow">›</div></div>
+      <div class="vacancy-card" onclick="toast('Детский невролог')"><div><div class="vacancy-title">Детский невролог</div><div class="vacancy-meta">частичная занятость</div></div><div class="vacancy-arrow">›</div></div>
+    </div>
+  </div>
+
+  <div class="bottom-space"></div>
+</div>
+
+
+<!-- SCREEN: Справки / медосмотры -->
+<!-- SCREEN: АЛЬФА ПРОФ -->
+<div class="screen" id="screen-docs">
+  <div class="nav-header">
+    <button class="nav-arrow hidden">←</button>
+    <button class="nav-arrow hidden">→</button>
+  </div>
+
+  <div class="logo-block">
+    <div class="logo-main">АЛЬФА ПРОФ</div>
+    <div class="logo-sub">справки и медосмотры</div>
+  </div>
+
+  <div class="slider-block">
+    <div class="slider-inner" id="slider-docs">
+      <div class="slide active">
+        <div class="slider-content">
+          <button class="slide-arrow" onclick="prevSlide('docs')">←</button>
+          <div class="slide-text">
+            <div class="slide-item">Справки<br>и медосмотры<span>официально</span></div>
+            <div class="slide-item">Удобный<br>сервис<span>с 7:30</span></div>
+          </div>
+          <button class="slide-arrow" onclick="nextSlide('docs')">→</button>
+        </div>
+      </div>
+      <div class="slide">
+        <div class="slider-content">
+          <button class="slide-arrow" onclick="prevSlide('docs')">←</button>
+          <div class="slide-text">
+            <div class="slide-item">Лабораторная<br>диагностика<span>ПЦР и анализы</span></div>
+            <div class="slide-item">Рентген<br>и УЗИ<span>8:00–20:00</span></div>
+          </div>
+          <button class="slide-arrow" onclick="nextSlide('docs')">→</button>
+        </div>
+      </div>
+    </div>
+    <div class="dots" id="dots-docs">
+      <button class="dot active" onclick="goSlide('docs',0)"></button>
+      <button class="dot" onclick="goSlide('docs',1)"></button>
+    </div>
+  </div>
+
+  <!-- Единый блок: телефон → иконки -->
+  <div style="border-bottom:1px solid var(--border); background:var(--bg-section);">
+    <div class="home-phone">
+      <span class="hp-num">8(800) 511-73-21</span>
+      <button class="hp-call" onclick="toast('Звоним: 8(800) 511-73-21')"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C8.6 21 3 15.4 3 8.5c0-.6.4-1 1-1H7.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg></button>
+    </div>
+    <div class="tiles" style="border-bottom:none; background:transparent; padding-top:0;">
+      <div class="tile" onclick="window.open('https://medcentranapa.ru/to-enroll-online.html','_blank')">Онлайн-запись ↗</div>
+      <div class="tile" onclick="window.open('https://medcentranapa.ru/personal-account.html#/appointments','_blank')">Личный кабинет ↗</div>
+    </div>
+    <div class="tiles tiles-3" style="border-bottom:none; background:transparent; padding-top:0;">
+      <div class="tile" onclick="toast('Услуги')">Услуги</div>
+      <div class="tile" onclick="goScreen('promo')">Акции</div>
+      <div class="tile" onclick="window.open('https://medcentranapa.ru','_blank')">Сайт ↗</div>
+    </div>
+    <div class="social-icons-row" style="border-bottom:none;">
+      <button class="soc-icon" onclick="window.open('https://vk.com/medcentralfa_anapa','_blank')" title="ВКонтакте">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="#4a4a4a"><path d="M6.79 7.3H4.05c.13 6.24 3.25 9.99 8.72 9.99h.31v-3.57c2.01.2 3.53 1.67 4.14 3.57h2.84c-.78-2.84-2.83-4.41-4.11-5.01 1.28-.74 3.08-2.54 3.51-4.98h-2.58c-.56 1.98-2.22 3.78-3.8 3.95V7.3H10.5v6.92c-1.6-.4-3.62-2.34-3.71-6.92Z"/></svg>
+      </button>
+      <button class="soc-icon" onclick="window.open('https://t.me/mcalfa_prof','_blank')" title="Telegram">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="#4a4a4a"><path d="M16.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+      </button>
+      <button class="soc-icon" onclick="" title="Макс">
+        <svg width="28" height="28" viewBox="0 0 1000 1000">
+          <path fill="#efefef" d="M634.4 0H365.6C64.5 0 0 64.6 0 365.6v268.8C0 935.5 64.6 1000 365.6 1000h268.8c301.1 0 365.6-64.6 365.6-365.6V365.6C1000 64.5 935.4 0 634.4 0"/>
+          <path fill="#4a4a4a" fill-rule="evenodd" clip-rule="evenodd" d="M508.211 878.328c-75.007 0-109.864-10.95-170.453-54.75-38.325 49.275-159.686 87.783-164.979 21.9 0-49.456-10.95-91.248-23.36-136.873-14.782-56.21-31.572-118.807-31.572-209.508 0-216.626 177.754-379.597 388.357-379.597 210.786 0 375.947 171.001 375.947 381.604.707 207.347-166.595 376.118-373.94 377.224m3.103-571.585c-102.564-5.292-182.499 65.7-200.201 177.024-14.6 92.162 11.315 204.398 33.397 210.238 10.585 2.555 37.23-18.98 53.837-35.587a189.8 189.8 0 0 0 92.71 33.032c106.273 5.112 197.08-75.794 204.215-181.95 4.154-106.382-77.67-196.486-183.958-202.574z"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- График -->
+  <div class="section-label">График работы</div>
+  <div class="sched-block">
+    <div class="sched-row"><span>Приём специалистов</span><span class="sched-time">7:30 – 20:00</span></div>
+  </div>
+
+  <!-- Адрес -->
+  <div class="section-label">Адрес</div>
+  <div class="map-embed">
+    <iframe src="https://yandex.ru/map-widget/v1/?ol=biz&oid=242001011614" title="Карта"></iframe>
+  </div>
+  <a class="map-link" href="https://yandex.com/maps/org/alfa_prof/242001011614/" target="_blank">
+    <span>📍 ул. Парковая, 61/1</span><span>Яндекс.Карты →</span>
+  </a>
+
+  <!-- Рейтинги -->
+  <div class="section-label">Рейтинги</div>
+  <div class="ratings-block">
+    <div class="ratings-grid">
+      <a class="rating-chip" href="https://prodoctorov.ru" target="_blank">
+        <div class="chip-score">5.0</div>
+        <div class="chip-stars"><span style="color:#f59e0b">★★★★★</span></div>
+        <div class="chip-name">ПроДокторов</div>
+        <div class="chip-count">1 000 отзывов</div>
+      </a>
+      <a class="rating-chip" href="https://yandex.com/maps/org/alfa_prof/242001011614/" target="_blank">
+        <div class="chip-score">5.0</div>
+        <div class="chip-stars"><span style="color:#f59e0b">★★★★★</span></div>
+        <div class="chip-name">Яндекс</div>
+        <div class="chip-count">1 000 отзывов</div>
+      </a>
+      <a class="rating-chip" href="https://sberzdorovye.ru" target="_blank">
+        <div class="chip-score">5.0</div>
+        <div class="chip-stars"><span style="color:#f59e0b">★★★★★</span></div>
+        <div class="chip-name">СберЗдоровье</div>
+        <div class="chip-count">1 000 отзывов</div>
+      </a>
+      <a class="rating-chip" href="https://napopravku.ru" target="_blank">
+        <div class="chip-score">5.0</div>
+        <div class="chip-stars"><span style="color:#f59e0b">★★★★★</span></div>
+        <div class="chip-name">НаПоправку</div>
+        <div class="chip-count">1 000 отзывов</div>
+      </a>
+    </div>
+  </div>
+
+  <div class="bottom-space"></div>
+</div>
+
+
+<!-- SCREEN: АЛЬФА СМАЙЛ -->
+<div class="screen" id="screen-stom">
+  <div class="nav-header">
+    <button class="nav-arrow hidden">←</button>
+    <button class="nav-arrow hidden">→</button>
+  </div>
+
+  <div class="logo-block">
+    <div class="logo-main">АЛЬФА СМАЙЛ</div>
+    <div class="logo-sub">Стоматология</div>
+  </div>
+
+  <div class="slider-block">
+    <div class="slider-inner" id="slider-stom">
+      <div class="slide active">
+        <div class="slider-content">
+          <button class="slide-arrow" onclick="prevSlide('stom')">←</button>
+          <div class="slide-text">
+            <div class="slide-item">Лечение<br>и протезирование<span>взрослые и дети</span></div>
+            <div class="slide-item">Удобный<br>сервис<span>онлайн-запись</span></div>
+          </div>
+          <button class="slide-arrow" onclick="nextSlide('stom')">→</button>
+        </div>
+      </div>
+      <div class="slide">
+        <div class="slider-content">
+          <button class="slide-arrow" onclick="prevSlide('stom')">←</button>
+          <div class="slide-text">
+            <div class="slide-item">Имплантация<br>и отбеливание<span>современные методы</span></div>
+            <div class="slide-item">Главный врач<br>А. Т. Губайдуллин<span>приём ежедневно</span></div>
+          </div>
+          <button class="slide-arrow" onclick="nextSlide('stom')">→</button>
+        </div>
+      </div>
+    </div>
+    <div class="dots" id="dots-stom">
+      <button class="dot active" onclick="goSlide('stom',0)"></button>
+      <button class="dot" onclick="goSlide('stom',1)"></button>
+    </div>
+  </div>
+
+  <!-- Единый блок: телефон → иконки -->
+  <div style="border-bottom:1px solid var(--border); background:var(--bg-section);">
+    <div class="home-phone">
+      <span class="hp-num">8(800) 555-40-20</span>
+      <button class="hp-call" onclick="toast('Звоним: 8(800) 555-40-20')"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C8.6 21 3 15.4 3 8.5c0-.6.4-1 1-1H7.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg></button>
+    </div>
+    <div class="tiles" style="border-bottom:none; background:transparent; padding-top:0;">
+      <div class="tile" onclick="window.open('https://alfa-smile.ru/to-enroll-online.html','_blank')">Онлайн-запись ↗</div>
+      <div class="tile" onclick="window.open('https://alfa-smile.ru/lichnyy-kabinet.html#/files','_blank')">Личный кабинет ↗</div>
+    </div>
+    <div class="tiles tiles-3" style="border-bottom:none; background:transparent; padding-top:0;">
+      <div class="tile" onclick="toast('Услуги')">Услуги</div>
+      <div class="tile" onclick="goScreen('promo')">Акции</div>
+      <div class="tile" onclick="window.open('https://alfa-smile.ru','_blank')">Сайт ↗</div>
+    </div>
+    <div class="social-icons-row" style="border-bottom:none;">
+      <button class="soc-icon" onclick="window.open('https://vk.com/alfa.smile','_blank')" title="ВКонтакте">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="#4a4a4a"><path d="M6.79 7.3H4.05c.13 6.24 3.25 9.99 8.72 9.99h.31v-3.57c2.01.2 3.53 1.67 4.14 3.57h2.84c-.78-2.84-2.83-4.41-4.11-5.01 1.28-.74 3.08-2.54 3.51-4.98h-2.58c-.56 1.98-2.22 3.78-3.8 3.95V7.3H10.5v6.92c-1.6-.4-3.62-2.34-3.71-6.92Z"/></svg>
+      </button>
+      <button class="soc-icon" onclick="window.open('https://t.me/alfa_smile','_blank')" title="Telegram">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="#4a4a4a"><path d="M16.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+      </button>
+      <button class="soc-icon" onclick="" title="Макс">
+        <svg width="28" height="28" viewBox="0 0 1000 1000">
+          <path fill="#efefef" d="M634.4 0H365.6C64.5 0 0 64.6 0 365.6v268.8C0 935.5 64.6 1000 365.6 1000h268.8c301.1 0 365.6-64.6 365.6-365.6V365.6C1000 64.5 935.4 0 634.4 0"/>
+          <path fill="#4a4a4a" fill-rule="evenodd" clip-rule="evenodd" d="M508.211 878.328c-75.007 0-109.864-10.95-170.453-54.75-38.325 49.275-159.686 87.783-164.979 21.9 0-49.456-10.95-91.248-23.36-136.873-14.782-56.21-31.572-118.807-31.572-209.508 0-216.626 177.754-379.597 388.357-379.597 210.786 0 375.947 171.001 375.947 381.604.707 207.347-166.595 376.118-373.94 377.224m3.103-571.585c-102.564-5.292-182.499 65.7-200.201 177.024-14.6 92.162 11.315 204.398 33.397 210.238 10.585 2.555 37.23-18.98 53.837-35.587a189.8 189.8 0 0 0 92.71 33.032c106.273 5.112 197.08-75.794 204.215-181.95 4.154-106.382-77.67-196.486-183.958-202.574z"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- График -->
+  <div class="section-label">График работы</div>
+  <div class="sched-block">
+    <div class="sched-row"><span>Приём</span><span class="sched-always">ежедневно 8:00–21:00</span></div>
+  </div>
+
+  <!-- Адрес -->
+  <div class="section-label">Адрес</div>
+  <div class="map-embed">
+    <iframe src="https://yandex.ru/map-widget/v1/?ol=biz&oid=27545238026" title="Карта"></iframe>
+  </div>
+  <a class="map-link" href="https://yandex.com/maps/org/alfa_smile/27545238026/" target="_blank">
+    <span>📍 ул. Владимирская, 93 к1</span><span>Яндекс.Карты →</span>
+  </a>
+
+  <!-- Рейтинги -->
+  <div class="section-label">Рейтинги</div>
+  <div class="ratings-block">
+    <div class="ratings-grid">
+      <a class="rating-chip" href="https://prodoctorov.ru" target="_blank">
+        <div class="chip-score">5.0</div>
+        <div class="chip-stars"><span style="color:#f59e0b">★★★★★</span></div>
+        <div class="chip-name">ПроДокторов</div>
+        <div class="chip-count">1 000 отзывов</div>
+      </a>
+      <a class="rating-chip" href="https://yandex.com/maps/org/alfa_smile/27545238026/" target="_blank">
+        <div class="chip-score">5.0</div>
+        <div class="chip-stars"><span style="color:#f59e0b">★★★★★</span></div>
+        <div class="chip-name">Яндекс</div>
+        <div class="chip-count">1 000 отзывов</div>
+      </a>
+      <a class="rating-chip" href="https://sberzdorovye.ru" target="_blank">
+        <div class="chip-score">5.0</div>
+        <div class="chip-stars"><span style="color:#f59e0b">★★★★★</span></div>
+        <div class="chip-name">СберЗдоровье</div>
+        <div class="chip-count">1 000 отзывов</div>
+      </a>
+      <a class="rating-chip" href="https://napopravku.ru" target="_blank">
+        <div class="chip-score">5.0</div>
+        <div class="chip-stars"><span style="color:#f59e0b">★★★★★</span></div>
+        <div class="chip-name">НаПоправку</div>
+        <div class="chip-count">1 000 отзывов</div>
+      </a>
+    </div>
+  </div>
+
+  <div class="bottom-space"></div>
+</div>
+
+
+<!-- SCREEN: Акции -->
+<div class="screen" id="screen-promo">
+  <div class="nav-header">
+    <button class="nav-arrow hidden">←</button>
+    <div class="label">Акции</div>
+    <button class="nav-arrow hidden">→</button>
+  </div>
+  <div class="promo-list">
+    <div class="promo-card" onclick="toast('МРТ со скидкой')">
+      <div class="promo-clinic">@ АЛЬФА</div>
+      <div class="promo-title">МРТ со скидкой 15%</div>
+      <div class="promo-desc">Запись на МРТ любого отдела в будние дни с 8:00 до 14:00</div>
+      <span class="promo-badge">до 30 апреля</span>
+    </div>
+    <div class="promo-card" onclick="toast('Комплексное УЗИ')">
+      <div class="promo-clinic">@ АЛЬФА</div>
+      <div class="promo-title">Комплексное УЗИ</div>
+      <div class="promo-desc">УЗИ органов брюшной полости + почек по цене одного исследования</div>
+      <span class="promo-badge">постоянная акция</span>
+    </div>
+    <div class="promo-card" onclick="toast('Первичный приём гинеколога')">
+      <div class="promo-clinic">АЛЬФА ЛИНИЯ</div>
+      <div class="promo-title">Первичный приём гинеколога</div>
+      <div class="promo-desc">Консультация + кольпоскопия по специальной цене для новых пациенток</div>
+      <span class="promo-badge">по записи</span>
+    </div>
+    <div class="promo-card" onclick="toast('Профосмотр для школьников')">
+      <div class="promo-clinic">АЛЬФА KIDS</div>
+      <div class="promo-title">Профосмотр для школьников</div>
+      <div class="promo-desc">Комплексный осмотр специалистов перед учебным годом</div>
+      <span class="promo-badge">август–сентябрь</span>
+    </div>
+    <div class="promo-card" onclick="toast('Бесплатная консультация')">
+      <div class="promo-clinic">АЛЬФА СМАЙЛ</div>
+      <div class="promo-title">Бесплатная консультация</div>
+      <div class="promo-desc">Консультация перед имплантацией All-on-4 / All-on-6 — бесплатно</div>
+      <span class="promo-badge">постоянная акция</span>
+    </div>
+  </div>
+  <div class="bottom-space"></div>
+</div>
+
+
+<!-- SCREEN: Лаборатория -->
+<div class="screen" id="screen-lab">
+  <div class="nav-header">
+    <div style="display:flex"><button class="nav-arrow" onclick="goScreen('emergency')">←</button><button class="nav-arrow" onclick="goScreen('alfa')">→</button></div>
+  </div>
+
+  <div class="logo-block">
+    <div class="logo-main">ЛАБОРАТОРИЯ</div>
+    <div class="logo-sub">50+ собственных показателей</div>
+  </div>
+
+  <!-- Единый блок: телефон → кнопки -->
+  <div style="border-bottom:1px solid var(--border); background:var(--bg-section);">
+    <div class="home-phone">
+      <span class="hp-num">8(800) 505-73-15</span>
+      <button class="hp-call" onclick="toast('Звоним: 8(800) 505-73-15')"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C8.6 21 3 15.4 3 8.5c0-.6.4-1 1-1H7.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg></button>
+    </div>
+    <div class="tiles" style="border-bottom:none; background:transparent; padding-top:0;">
+      <div class="tile" onclick="window.open('https://medcentralfa.ru/lichnyy-kabinet.html#/appointments','_blank')">Результаты ↗</div>
+      <div class="tile" onclick="window.open('https://medcentralfa.ru/services/laboratornye-issledovaniya.html','_blank')">Цены ↗</div>
+    </div>
+  </div>
+
+  <!-- График -->
+  <div class="section-label">График работы</div>
+  <div class="sched-block">
+    <div class="sched-row"><span>Приём анализов</span><span class="sched-time">8:00 – 19:30</span></div>
+  </div>
+
+  <!-- Что исследуем -->
+  <div class="section-label">Что исследуем</div>
+  <div style="padding:0 16px 18px; border-bottom:1px solid var(--border);">
+    <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:7px;list-style:disc;">
+      <li style="font-size:13px;color:#444;line-height:1.5;">Общий анализ крови и мочи</li>
+      <li style="font-size:13px;color:#444;line-height:1.5;">Биохимия крови</li>
+      <li style="font-size:13px;color:#444;line-height:1.5;">Коагулология (свёртываемость)</li>
+      <li style="font-size:13px;color:#444;line-height:1.5;">Гематология</li>
+      <li style="font-size:13px;color:#444;line-height:1.5;">Гормоны</li>
+      <li style="font-size:13px;color:#444;line-height:1.5;">Онкомаркеры</li>
+      <li style="font-size:13px;color:#444;line-height:1.5;">Витамины и микроэлементы</li>
+      <li style="font-size:13px;color:#444;line-height:1.5;">Иммунохимический анализ (ИФА)</li>
+    </ul>
+  </div>
+
+  <div class="bottom-space"></div>
+</div>
+
+
+<!-- SCREEN: Скорая помощь -->
+<div class="screen" id="screen-emergency">
+  <div class="nav-header">
+    <div style="display:flex"><button class="nav-arrow" onclick="goScreen('kids')">←</button><button class="nav-arrow" onclick="goScreen('lab')">→</button></div>
+  </div>
+
+  <div class="logo-block">
+    <div class="logo-main">СКОРАЯ АЛЬФА</div>
+    <div class="logo-sub">коммерческая скорая помощь<br>выезд до 10 мин</div>
+  </div>
+
+  <!-- Единый блок: телефоны → услуги -->
+  <div style="border-bottom:1px solid var(--border); background:var(--bg-section);">
+    <div class="home-phone">
+      <div style="display:flex;flex-direction:column;align-items:center;">
+        <span style="height:14px;display:block;"></span>
+        <span class="hp-num">8(800) 511-00-03</span>
+        <span style="font-size:10px;color:var(--text-muted);font-weight:500;margin-top:2px;">основной</span>
+      </div>
+      <button class="hp-call" onclick="toast('Звоним: 8(800) 511-00-03')"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C8.6 21 3 15.4 3 8.5c0-.6.4-1 1-1H7.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg></button>
+    </div>
+    <div class="home-phone" style="padding-top:0;">
+      <span class="hp-num">+7(918) 623-71-24</span>
+      <button class="hp-call" onclick="toast('Звоним: +7(918) 623-71-24')"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C8.6 21 3 15.4 3 8.5c0-.6.4-1 1-1H7.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg></button>
+    </div>
+    <div class="tiles" style="border-bottom:none; background:transparent; padding-top:4px;">
+      <div class="tile" onclick="toast('Скорая помощь')">Скорая помощь ↗</div>
+      <div class="tile" onclick="toast('Вызов врача на дом')">Вызов врача ↗</div>
+    </div>
+    <div class="tiles" style="border-bottom:none; background:transparent; padding-top:0;">
+      <div class="tile" onclick="toast('Транспортировка по краю и РФ')">Перевозка ↗</div>
+      <div class="tile" onclick="toast('Дежурство на мероприятиях')">Дежурство ↗</div>
+    </div>
+  </div>
+
+  <!-- График -->
+  <div class="section-label">График работы</div>
+  <div class="sched-block">
+    <div class="sched-row"><span>Выезд бригады</span><span class="sched-always">круглосуточно</span></div>
+  </div>
+
+  <!-- Что входит -->
+  <div class="section-label">В стоимость входит</div>
+  <div style="padding:0 16px 18px; border-bottom:1px solid var(--border);">
+    <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:7px;list-style:disc;">
+      <li style="font-size:13px;color:#444;line-height:1.5;">Выезд бригады — не более 10 мин по городу</li>
+      <li style="font-size:13px;color:#444;line-height:1.5;">Осмотр без ограничения времени</li>
+      <li style="font-size:13px;color:#444;line-height:1.5;">ЭКГ и измерение давления</li>
+      <li style="font-size:13px;color:#444;line-height:1.5;">Тропониновый тест при подозрении на инфаркт</li>
+      <li style="font-size:13px;color:#444;line-height:1.5;">Пульсоксиметрия и сахар крови при необходимости</li>
+      <li style="font-size:13px;color:#444;line-height:1.5;">Медикаменты: таблетки, уколы, капельницы</li>
+      <li style="font-size:13px;color:#444;line-height:1.5;">Транспортировка в Альфу и госпитализация в стационар — бесплатно</li>
+    </ul>
+  </div>
+
+  <div class="section-label">Оплачивается отдельно</div>
+  <div style="padding:0 16px 18px; border-bottom:1px solid var(--border);">
+    <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:7px;list-style:disc;">
+      <li style="font-size:13px;color:#444;line-height:1.5;">Транспортировка в муниципальные учреждения</li>
+      <li style="font-size:13px;color:#444;line-height:1.5;">Тесты на Covid-19 и грипп</li>
+      <li style="font-size:13px;color:#444;line-height:1.5;">Инфузионная терапия вне экстренной помощи (детокс, витамины)</li>
+    </ul>
+  </div>
+
+  <div class="bottom-space"></div>
+</div>
+
+
+
+<!-- Toast notification -->
+<div class="toast" id="toast"></div>
+
+<script>
+  // Screen navigation
+  function goScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById('screen-' + id).classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  // Slider state
+  const sliderState = {};
+
+  function getSlides(name) {
+    return document.querySelectorAll(`#slider-${name} .slide`);
+  }
+  function getDots(name) {
+    return document.querySelectorAll(`#dots-${name} .dot`);
+  }
+  function getCurrentSlide(name) {
+    return sliderState[name] || 0;
+  }
+  function setSlide(name, idx) {
+    const slides = getSlides(name);
+    const dots = getDots(name);
+    const total = slides.length;
+    idx = (idx + total) % total;
+    slides.forEach((s, i) => s.classList.toggle('active', i === idx));
+    dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+    sliderState[name] = idx;
+  }
+  function nextSlide(name) { setSlide(name, getCurrentSlide(name) + 1); }
+  function prevSlide(name) { setSlide(name, getCurrentSlide(name) - 1); }
+  function goSlide(name, idx) { setSlide(name, idx); }
+
+  // Home button on all sub-screens (prepend = left side)
+  document.querySelectorAll('.nav-header').forEach(h => {
+    const btn = document.createElement('button');
+    btn.className = 'nav-arrow';
+    btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12L12 3l9 9"/><path d="M5 10v9a1 1 0 0 0 1 1h4v-4h4v4h4a1 1 0 0 0 1-1v-9"/></svg>`;
+    btn.title = 'На главную';
+    btn.onclick = () => goScreen('home');
+    h.prepend(btn);
+  });
+
+  // Replace nav-arrow text with SVG chevrons
+  const chevL = `<svg width="8" height="13" viewBox="0 0 8 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,1 2,6.5 6,12"/></svg>`;
+  const chevR = `<svg width="8" height="13" viewBox="0 0 8 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,1 6,6.5 2,12"/></svg>`;
+  document.querySelectorAll('.nav-arrow').forEach(btn => {
+    if (btn.textContent.trim() === '←') btn.innerHTML = chevL;
+    else if (btn.textContent.trim() === '→') btn.innerHTML = chevR;
+  });
+
+  // Auto-advance sliders
+  setInterval(() => {
+    ['home', 'alfa', 'line', 'kids', 'docs', 'stom'].forEach(name => {
+      const screen = document.getElementById('screen-' + name);
+      if (screen && screen.classList.contains('active')) {
+        nextSlide(name);
+      }
+    });
+  }, 4000);
+
+  // Toast
+  let toastTimer;
+  function toast(msg) {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove('show'), 2000);
+  }
+</script>
+</body>
+</html>
